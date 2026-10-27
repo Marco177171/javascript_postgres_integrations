@@ -1,0 +1,18 @@
+{
+  "name": "postgres_manipulation",
+  "version": "1.0.0",
+  "description": "Leveraging postgres javascript package",
+  "license": "ISC",
+  "author": "Marco Sebastiani",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "node --env-file=.env server.js"
+  },
+  "keywords": [],
+  "dependencies": {
+    "http-server": "^14.1.1",
+    "postgres": "^3.4.9"
+  }
+}

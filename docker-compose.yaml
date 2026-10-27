@@ -1,0 +1,20 @@
+# Use this file to instantiate Postgres.
+# Generate and modify tables with Adminer
+
+services:
+  postgres:
+    container_name: jpi_postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_NAME=${POSTGRES_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:${POSTGRES_PORT}"
+  adminer:
+    container_name: jpi_adminer
+    image: adminer:latest
+    ports:
+      - "${ADMINER_PORT}:8080"
