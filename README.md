@@ -1,4 +1,4 @@
-Calling postgres instances from JavaScript webapps.
+#Calling postgres instances from JavaScript webapps.
 
 What you need:
 NodeJS and NPM installed on your system.
