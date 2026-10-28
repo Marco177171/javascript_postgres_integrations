@@ -1,5 +1,5 @@
 {
-  "name": "postgres_manipulation",
+  "name": "javascript_postgres_integrations",
   "version": "1.0.0",
   "description": "Leveraging Postgres JavaScript package",
   "license": "ISC",
@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "test": "test",
-    "start": "node --env-file=.env server.js -a localhost -p 3000"
+    "start": "node --env-file=.env server.js"
   },
   "keywords": [],
   "dependencies": {

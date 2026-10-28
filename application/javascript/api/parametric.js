@@ -34,3 +34,21 @@ export async function GetById(res, table_name, id) {
 		res.end(JSON.stringify({ error: "Errore database" }));
 	}
 }
+
+export async function InsertNew(res, table_name, columns) {
+	try {
+		const result = await sql`INSERT INTO ${sql(table_name)} (brand, model, year)
+			VALUES ('Ford', 'Mustang', 1964);`;
+		res.writeHead(200, {
+			"Content-Type": "application/json",
+		});
+		res.end(JSON.stringify(result));
+	}
+	catch (error) {
+		console.error(error);
+		res.writeHead(500, {
+			"Content-Type": "application/json",
+		});
+		res.end(JSON.stringify({ error: "Errore database" }));
+	}
+}

@@ -1,7 +1,7 @@
 // server.js
 import { createServer } from "node:http";
 import { RenderPageFromBase } from "./application/javascript/user_interface.js"
-import { GetAll, GetById } from "./application/javascript/api/parametric.js"
+import { GetAll, GetById, InsertNew } from "./application/javascript/api/parametric.js"
 
 const server = createServer(async (req, res) => {
 	// UI renderings
@@ -13,8 +13,10 @@ const server = createServer(async (req, res) => {
 	// Api calls
 	if (req.url === "/api/users" && req.method === "GET")
 		return GetAll(res, "users");
-	if (req.url === "/api/users/:id" && req.method === "GET")
+	if (req.url === "/api/users/0" && req.method === "GET")
 		return GetById(res, "users", 0);
+	if (req.url === "/api/insert" && req.method === "POST")
+		return InsertNew(res, "cars", ["brand", "model", "year"], ["Ford", "Mustang", 1964]);
 
 	res.writeHead(404);
 	res.end("Not Found");
