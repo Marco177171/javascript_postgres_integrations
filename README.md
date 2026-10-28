@@ -1,22 +1,28 @@
-#Calling postgres instances from JavaScript webapps.
+## Calling postgres instances from JavaScript webapps.
 
-What you need:
+# What you need:
 NodeJS and NPM installed on your system.
 
-What to install first.
+# What to install first.
 We have few important dependencies:
 ```bash
 npm install postgres
 ```
 
-Env file.
+# The Environ file.
 Copy the example:
 ```bash
 cp .env.example .env
 ```
 This will allow us to use secrets later.
 
-How to run the server.
+# Docker system.
+Run Postgres and Adminer to test:
+```bash
+docker compose up --build
+```
+
+# How to run the local server.
 From the root of the project:
 ```bash
 node --env-file=.env server.js
