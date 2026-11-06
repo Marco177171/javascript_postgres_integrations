@@ -2,8 +2,8 @@ import fs from "fs/promises"
 
 export async function RenderPageFromBase(res, page_name) {
 	try {
-		let baseHtml = await fs.readFile(`./application/pages/base.html`, "utf8");
-		const htmlContent = await fs.readFile(`./application/pages/${page_name}.html`, "utf8");
+		let baseHtml = await fs.readFile(`./public/pages/base.html`, "utf8");
+		const htmlContent = await fs.readFile(`./public/pages/${page_name}.html`, "utf8");
 		const compositePage = baseHtml.replace("{% JPI_CONTENT %}", htmlContent);
 		res.writeHead(200, { 'Content-Type': 'text/html' });
 		res.end(compositePage);
@@ -16,7 +16,7 @@ export async function RenderPageFromBase(res, page_name) {
 
 export async function RenderStandalonePage(res, page_name) {
 	try {
-		const htmlContent = await fs.readFile(`./application/pages/${page_name}.html`);
+		const htmlContent = await fs.readFile(`./public/pages/${page_name}.html`);
 		res.writeHead(200, { 'Content-Type': 'text/html' });
 		res.end(htmlContent);
 	}

@@ -1,0 +1,42 @@
+<h1>API calls examples</h1>
+<p>Calling Postgres. Open the console to see the logs.</p>
+
+<form onsubmit="
+		InsertNew(); 
+		return false;
+	">
+	<input required type="text" id="brand" placeholder="Car brand"></input>
+	<input required type="text" id="model" placeholder="Car model"></input>
+	<input required type="number" id="year" value="1999"></input>
+	<button type="submit">Submit</button>
+	<div id="users"></div>
+</form>
+
+<button onclick="
+		GetUsers(); 
+		return false
+	">
+	GetUsers
+</button>
+
+<script>
+	function InsertNew() {
+		console.log("InsertNew function called.");
+		return null;
+	}
+
+	async function GetUsers() {
+		try {
+			const javascript_array = await fetch("/api/users", {
+				method: "GET"
+			});
+			const users_json = await javascript_array.json();
+			console.log("users_json: ", users_json);
+			users_json.map(item => {
+				console.log(`${item.email} ${item.name} ${item.surname}`);
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	}
+</script>
