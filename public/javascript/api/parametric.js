@@ -1,5 +1,5 @@
 import { request } from "node:http";
-import sql from "../db.js";
+import sql from "../init_postgres.js";
 
 export async function GetAll(res, table_name) {
 	try {
@@ -21,8 +21,7 @@ export async function GetAll(res, table_name) {
 
 export async function GetByID(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
-	console.log("PARAMS: ", params);
-
+	// console.log("Params: ", params);
 	try {
 		const result = await sql`SELECT * FROM ${sql(params.get("table"))} 
 			WHERE id = ${params.get("id")}`;
