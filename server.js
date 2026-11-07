@@ -1,7 +1,7 @@
 // server.js
 import { createServer } from "node:http";
 import { RenderPageFromBase } from "./public/javascript/user_interface.js"
-import { GetAll, GetByID, InsertNew } from "./public/javascript/api/parametric.js"
+import { GetAll, GetByID, Post } from "./public/javascript/api/parametric.js"
 
 const server = createServer(async (req, res) => {
 	// UI renderings
@@ -10,13 +10,19 @@ const server = createServer(async (req, res) => {
 	if (req.url === "/api_calls" && req.method === "GET")
 		return RenderPageFromBase(res, "api_calls");
 	
-	// Api calls
-	if (req.url === "/api/user" && req.method === "POST")
-		return NewUser(res, "users");
-	if (req.url === "/api/users" && req.method === "GET")
-		return GetAll(res, "users");
-	if (req.url.split("?")[0] === "/api/query" && req.method === "GET")
+	// API calls
+	
+	// > GET
+	if (req.url.split("?")[0] === "/api/get_all" && req.method === "GET")
+		return GetAll(req, res);
+	if (req.url.split("?")[0] === "/api/get_by_id" && req.method === "GET")
 		return GetByID(req, res);
+	if (req.url.split("?")[0] === "/api/search" && req.method === "GET")
+		return SearchInTable(req, res);
+	
+	// > POST
+	if (req.url.split("?")[0] === "/api" && req.method === "POST")
+		return Post(req, res);
 	if (req.url === "/api/insert" && req.method === "POST")
 		return InsertNew(res, "cars", ["brand", "model", "year"], ["Ford", "Mustang", 1964]);
 

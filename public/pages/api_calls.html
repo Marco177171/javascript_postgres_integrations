@@ -12,12 +12,30 @@
 	<div id="users"></div>
 </form>
 
+<h6>Get all users</h6>
 <button onclick="
 		GetUsers(); 
 		return false
 	">
 	GetUsers
 </button>
+
+<h6>Get user by ID</h6>
+<form onsubmit="
+		GetUserById();
+		return false;
+	">
+	<input required type="number" name="user_id" id="user_id" default="1">
+	<button type="submit">Search</button>
+</form>
+
+<h6>Create Jenny</h6>
+<form onsubmit="
+		NewUser();
+		return false;
+	">
+	<button type="submit">NewUser</button>
+</form>
 
 <script>
 	function InsertNew() {
@@ -27,11 +45,39 @@
 
 	async function GetUsers() {
 		try {
-			const javascript_array = await fetch("/api/users", {
+			const javascript_array = await fetch("/api/get_all?table=users", {
+				method: "GET",
+				// headers: {
+				// 	"Authorization": `Bearer ${localStorage.getItem("token")}`
+				// }
+			});
+			const users_json = await javascript_array.json();
+			console.log(users_json);
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	async function NewUser() {
+		try {
+			const javascript_array = await fetch("/api?table=users", {
+				method: "POST"
+			});
+			const users_json = await javascript_array.json();
+			console.log(users_json);
+		} catch (error) {
+			console.error(error);
+		}
+	}
+	
+	async function GetUserById() {
+		const user_id = document.getElementById("user_id").value;
+		try {
+			const javascript_array = await fetch(`/api/get_by_id?table=users&id=${user_id}`, {
 				method: "GET"
 			});
 			const users_json = await javascript_array.json();
-			console.log("users_json: ", users_json);
+			// console.log("users_json: ", users_json);
 			users_json.map(item => {
 				console.log(`${item.email} ${item.name} ${item.surname}`);
 			});
