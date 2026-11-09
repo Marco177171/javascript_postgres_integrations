@@ -1,0 +1,28 @@
+<h1>POSTing an object to the DB</h1>
+<p>Explain...</p>
+
+<h3>Create Jenny</h3>
+<form onsubmit="
+		NewUser();
+		return false;
+	">
+	<button type="submit">NewUser</button>
+</form>
+
+<script>
+	async function NewUser() {
+		try {
+			const javascript_array = await fetch("/api?table=users", {
+				method: "POST",
+				body: JSON.stringify({
+					// JSON here...
+					// Always send as string
+				})
+			});
+			const users_json = await javascript_array.json();
+			console.log(users_json);
+		} catch (error) {
+			console.error(error);
+		}
+	}
+</script>

@@ -1,5 +1,5 @@
-<h1>API calls examples</h1>
-<p>Calling Postgres. Open the console to see the logs.</p>
+<h1>GETting object from the DB</h1>
+<p>How to fetch objects stored on the DB</p>
 
 <form onsubmit="
 		InsertNew(); 
@@ -12,7 +12,25 @@
 	<div id="users"></div>
 </form>
 
-<h6>Get all users</h6>
+<h3>Get all users</h3>
+<code>
+<pre>
+async function GetUsers() {
+	try {
+		const javascript_array = await fetch("/api/get_all?table=users", {
+			method: "GET",
+			// headers: {
+			// 	"Authorization": `Bearer ${localStorage.getItem("token")}`
+			// }
+		});
+		const users_json = await javascript_array.json();
+		console.log(users_json);
+	} catch (error) {
+		console.error(error);
+	}
+}
+</pre>
+</code>
 <button onclick="
 		GetUsers(); 
 		return false
@@ -20,21 +38,13 @@
 	GetUsers
 </button>
 
-<h6>Get user by ID</h6>
+<h3>Get user by ID</h3>
 <form onsubmit="
 		GetUserById();
 		return false;
 	">
 	<input required type="number" name="user_id" id="user_id" default="1">
 	<button type="submit">Search</button>
-</form>
-
-<h6>Create Jenny</h6>
-<form onsubmit="
-		NewUser();
-		return false;
-	">
-	<button type="submit">NewUser</button>
 </form>
 
 <script>
@@ -50,18 +60,6 @@
 				// headers: {
 				// 	"Authorization": `Bearer ${localStorage.getItem("token")}`
 				// }
-			});
-			const users_json = await javascript_array.json();
-			console.log(users_json);
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	async function NewUser() {
-		try {
-			const javascript_array = await fetch("/api?table=users", {
-				method: "POST"
 			});
 			const users_json = await javascript_array.json();
 			console.log(users_json);

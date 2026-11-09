@@ -64,11 +64,11 @@ export async function SearchInTable(req, res) {
 
 export async function Post(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
-	// console.log("Params: ", params);
 	try {
-		const result = await sql`INSERT INTO 
+		const result = await sql`INSERT INTO
 			${sql(params.get("table"))} (name, surname, email, password)
-			VALUES ('Jenny', 'Penflix', 'jenny@email.com', 'password');`;
+			VALUES ('Jenny', 'Penflix', 'jenny@email.com', 'password')
+			ON CONFLICT DO NOTHING;`;
 		res.writeHead(200, {
 			"Content-Type": "application/json",
 		});
