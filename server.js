@@ -1,7 +1,10 @@
 // server.js
 import { createServer } from "node:http";
 import { RenderPageFromBase } from "./public/javascript/user_interface.js"
-import { GetAll, GetByID, Post } from "./public/javascript/api/parametric.js"
+import { 
+	GetByID, Search,
+	Post
+} from "./public/javascript/api/parametric.js"
 
 const server = createServer(async (req, res) => {
 	// ManageCachedObjects();
@@ -21,18 +24,14 @@ const server = createServer(async (req, res) => {
 	// API calls
 	
 	// > GETs
-	else if (req.url.split("?")[0] === "/api/get_all" && req.method === "GET")
-		return GetAll(req, res);
 	else if (req.url.split("?")[0] === "/api/get_by_id" && req.method === "GET")
 		return GetByID(req, res);
-	else if (req.url.split("?")[0] === "/api/search" && req.method === "GET")
-		return SearchInTable(req, res);
+	else if (req.url.split("?")[0] === "/api" && req.method === "GET")
+		return Search(req, res);
 	
-	// > POST
+	// > POSTs
 	else if (req.url.split("?")[0] === "/api" && req.method === "POST")
 		return Post(req, res);
-	else if (req.url === "/api/insert" && req.method === "POST")
-		return InsertNew(res, "cars", ["brand", "model", "year"], ["Ford", "Mustang", 1964]);
 
 	res.writeHead(404);
 	res.end("Not Found");
