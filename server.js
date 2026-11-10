@@ -10,16 +10,16 @@ const server = createServer(async (req, res) => {
 	// ManageCachedObjects();
 	
 	// UI renderings
-	if (req.url === "/" && req.method === "GET")
+	if (req.url === "/docs" && req.method === "GET")
 		return RenderPageFromBase(res, "index");
-	else if (req.url === "/get_calls" && req.method === "GET")
-		return RenderPageFromBase(res, "get_calls");
-	else if (req.url === "/post_calls" && req.method === "GET")
-		return RenderPageFromBase(res, "post_calls");
-	else if (req.url === "/patch_calls" && req.method === "GET")
-		return RenderPageFromBase(res, "patch_calls");
-	else if (req.url === "/delete_calls" && req.method === "GET")
-		return RenderPageFromBase(res, "delete_calls");
+	else if (req.url === "/docs/get" && req.method === "GET")
+		return RenderPageFromBase(res, "get");
+	else if (req.url === "/docs/post" && req.method === "GET")
+		return RenderPageFromBase(res, "post");
+	else if (req.url === "/docs/patch" && req.method === "GET")
+		return RenderPageFromBase(res, "patch");
+	else if (req.url === "/docs/delete" && req.method === "GET")
+		return RenderPageFromBase(res, "delete");
 	
 	// API calls
 	

@@ -1,0 +1,84 @@
+<h1>GETting objects from the DB</h1>
+<h2>How to fetch objects stored on the DB</h2>
+<p>In order to GET the objects on a table, call this endpoint:</p>
+<code>.../api?table=*table_name* | method GET</code>
+<p>The <code>GET</code> method automatically redirects the request to the <code>Search()</code> function.</p>
+<p>If only <code>table</code> is defined in the URL, the DB will return all the entries.</p>
+<span>Examples:</span><br>
+<code>.../api&table=cars&brand=Mercedes</code><br>
+<code>.../api&table=photographers&Name=Robert&LastName=Capa</code><br>
+<code>.../api&table=computers&brand=Apple&model=MacBook&year=2007</code>
+<p>If a query is specified in the URL, the DB will filter the results using the <code>AND</code> operator.</p>
+
+<h3>Example: GET all users</h3>
+<pre>
+async function GetUsers() {
+	try {
+		const users = await fetch("/api/get_all?table=users", {
+			method: "GET",
+			// headers: {
+			// 	"Authorization": `Bearer ${localStorage.getItem("token")}`
+			// }
+		});
+		const users_json = await users;
+		console.log(users_json);
+	} catch (error) {
+		console.error(error);
+	}
+}
+</pre>
+<p>The result <code>users</code> is a JSON. You don't need further conversions.</p>
+
+<button onclick="
+		GetUsers(); 
+		return false
+	">
+	GetUsers
+</button>
+
+<h3>Get user by ID</h3>
+<form onsubmit="
+		GetUserById();
+		return false;
+	">
+	<input required type="number" name="user_id" id="user_id" default="1">
+	<button type="submit">Search</button>
+</form>
+
+<script>
+	function InsertNew() {
+		console.log("InsertNew function called.");
+		return null;
+	}
+
+async function GetUsers() {
+	try {
+		const users = await fetch("/api/get_all?table=users", {
+			method: "GET",
+			// headers: {
+			// 	"Authorization": `Bearer ${localStorage.getItem("token")}`
+			// }
+		});
+		const users_json = await users;
+		console.log(users_json);
+	} catch (error) {
+		console.error(error);
+	}
+}
+	
+	async function GetUserById() {
+		const user_id = document.getElementById("user_id").value;
+		try {
+			const javascript_array = await fetch(`/api/get_by_id?table=users&id=${user_id}`, {
+				method: "GET"
+			});
+			const users_json = await javascript_array.json();
+			// console.log("users_json: ", users_json);
+			users_json.map(item => {
+				console.log(`${item.email} ${item.name} ${item.surname}`);
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	}
+</script>
