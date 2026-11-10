@@ -6,7 +6,7 @@ export async function GetAll(req, res) {
 	try {
 		const results = await sql`
 			SELECT * 
-			FROM ${sql(params.get("table"))}
+			FROM ${sql(params.get("table"))};
 		`;
 		res.writeHead(200, {
 			"Content-Type": "application/json",
@@ -28,7 +28,7 @@ export async function GetByID(req, res) {
 		const result = await sql`
 			SELECT * 
 			FROM ${sql(params.get("table"))} 
-			WHERE id = ${params.get("id")}
+			WHERE id = ${params.get("id")};
 		`;
 		res.writeHead(200, {
 			"Content-Type": "application/json",
@@ -80,11 +80,11 @@ export async function Search(req, res) {
 				FROM ${sql(params.get("table"))}
 				WHERE ${conditions.reduce(
 					(acc, condition) => sql`${acc} AND ${condition}`
-				)}
+				)};
 			` : 
 			await sql`
 				SELECT *
-				FROM ${sql(params.get("table"))}
+				FROM ${sql(params.get("table"))};
 			`;
 		res.writeHead(200, {
 			"Content-Type": "application/json",
@@ -106,29 +106,12 @@ export async function Post(req, res) {
     for await (const chunk of req) {
         chunks.push(chunk);
     }
-    const body = Buffer.concat(chunks);
-    console.log(JSON.parse(body));
-	
-	// const keys = Array.from.params.keys();
-	// const columns = [];
-	// const values = [];
-	
-	// for (const key in keys) {
-	// 	if (key === "table")
-	// 		continue;
-	// 	columns.push(`${sql(key)}`);
-	// 	values.push(`${params.get(key)}`);
-	// }
-
-	// console.log(keys);
-	// console.log(values);
+    const body = JSON.parse(Buffer.concat(chunks));
 
 	try {
 		const result = await sql`
-			INSERT INTO
-			${sql(params.get("table"))} 
-			(name, surname, email, password)
-			values ('Jenny', 'Penflix', 'jenny@email.com', 'password')
+			INSERT INTO ${sql(params.get("table"))}
+			${sql(body)}
 			ON CONFLICT DO NOTHING;
 		`;
 		res.writeHead(200, {
@@ -147,14 +130,28 @@ export async function Post(req, res) {
 
 export async function Delete(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
+    const chunks = [];
+
+    for await (const chunk of req) {
+        chunks.push(chunk);
+    }
+    const body = JSON.parse(Buffer.concat(chunks));
+
+	const conditions = [];
+	for (const [key, value] of Object.entries(body)) {
+		if (key === "table") 
+			continue;
+		conditions.push(
+			sql`${sql(key)} = ${value}`
+		);
+	}
 
 	try {
 		const result = await sql`
-			DELETE FROM 
-			${sql(params.get("table"))} 
-			(name, surname, email, password)
-			values ('Jenny', 'Penflix', 'jenny@email.com', 'password')
-			ON CONFLICT DO NOTHING;
+			DELETE FROM ${sql(params.get("table"))}
+			WHERE ${conditions.reduce(
+				(acc, condition) => sql`${acc} AND ${condition}`
+			)};
 		`;
 		res.writeHead(200, {
 			"Content-Type": "application/json",
@@ -166,6 +163,6 @@ export async function Delete(req, res) {
 		res.writeHead(500, {
 			"Content-Type": "application/json",
 		});
-		res.end(JSON.stringify({ error: "Errore database" }));
+		res.end(JSON.stringify({ error }));
 	}
 }

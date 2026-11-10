@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 import { RenderPageFromBase } from "./public/javascript/user_interface.js"
 import { 
 	GetByID, Search,
-	Post
+	Post, Delete
 } from "./public/javascript/api/parametric.js"
 
 const server = createServer(async (req, res) => {
@@ -32,6 +32,10 @@ const server = createServer(async (req, res) => {
 	// > POSTs
 	else if (req.url.split("?")[0] === "/api" && req.method === "POST")
 		return Post(req, res);
+
+	// > DELETEs
+	else if (req.url.split("?")[0] === "/api" && req.method === "DELETE")
+		return Delete(req, res);
 
 	res.writeHead(404);
 	res.end("Not Found");
