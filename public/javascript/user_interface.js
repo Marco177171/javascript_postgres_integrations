@@ -1,7 +1,16 @@
 import fs from "fs/promises"
 
-export async function GetCSS() {
-	return fs.open("../static/css/jpi.css");
+export async function GetStaticSource(req, res) {
+	const params = new URLSearchParams(req.url.split("?")[1]);
+	try {
+		const file = await fs.readFile(`./public/static/${params.get("file")}`);
+		res.end(file);
+	} catch (error) {
+		res.writeHead(500, {
+			'Content-Type': 'text/html' 
+		});
+		res.end(`Could not get ${params.get("file")}. ${error.message}`);
+	}
 }
 
 export async function RenderPageFromBase(res, page_name) {

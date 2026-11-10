@@ -1,28 +1,38 @@
-<h1>POSTing an object to the DB</h1>
-<p>Explain...</p>
+<h1>POSTing objects to the DB</h1>
+<p>In order to POST a new object to a table, call this endpoint:</p>
+<code>.../api?table=*table_name* | method POST</code>
 
-<h3>Create Jenny</h3>
-<form onsubmit="
-		NewUser();
-		return false;
-	">
-	<button type="submit">NewUser</button>
-</form>
+<p>The <code>POST</code> method automatically redirects the request to the <code>Post()</code> function.</p>
+<p>The function <code>Post()</code> executes the <code>INSERT INTO *table* (columns) VALUES (values) ON CONFLICT DO NOTHING;</code> query in Postgres.</p>
+<p>Specify <code>?table=*...*</code> in the Request's URL. All other entries will be ignored.</p>
+<p>Define Unique constraints in the DB for the <code>ON CONFLICT DO NOTHING</code> clause to take effect.</p>
 
-<script>
-	async function NewUser() {
-		try {
-			const javascript_array = await fetch("/api?table=users", {
-				method: "POST",
-				body: JSON.stringify({
-					// JSON here...
-					// Always send as string
-				})
-			});
-			const users_json = await javascript_array.json();
-			console.log(users_json);
-		} catch (error) {
-			console.error(error);
-		}
+<div class="divider"></div>
+<span>Examples:</span><br>
+<code>.../api?table=cars</code><br>
+<code>.../api?table=photographers</code><br>
+<code>.../api?table=computers</code>
+<p>Use the <code>body</code> in the <code>fetch()</code> request in order to specify the contents.</p>
+<p>Use <code>JSON.stringify({...})</code> in order to send the body in the correct format.</p>
+
+<div class="divider"></div>
+<h3>Example: POST a new user.</h3>
+<pre>async function GetUsers() {
+	try {
+		const result = await fetch("/api?table=users", {
+			method: "POST",
+			// headers: {
+			// 	"Authorization": `Bearer ${localStorage.getItem("token")}`
+			// },
+			body: JSON.stringify({
+				"name": ...,
+				"last_name": ...,
+				"email": ...
+			})
+		});
+		const users_json = await users.json();
+		console.log(users_json);
+	} catch (error) {
+		console.error(error);
 	}
-</script>
+}</pre>

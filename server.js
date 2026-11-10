@@ -1,14 +1,19 @@
 // server.js
 import { createServer } from "node:http";
-import { RenderPageFromBase } from "./public/javascript/user_interface.js"
+import { RenderPageFromBase, GetStaticSource } from "./public/javascript/user_interface.js"
 import { 
 	GetByID, Search,
 	Post, Delete
-} from "./public/javascript/api/parametric.js"
+} from "./public/javascript/api/crud_operations.js"
+import { Registration } from "./public/javascript/api/authentication.js";
+import fs from "fs";
 
 const server = createServer(async (req, res) => {
 	// ManageCachedObjects();
 	
+	// Get static sources (CSS, fonts, ...)
+	if (req.url.split("?")[0] === "/static" && req.method === "GET")
+		return GetStaticSource(req, res);
 	// UI renderings
 	if (req.url === "/docs" && req.method === "GET")
 		return RenderPageFromBase(res, "index");
@@ -22,6 +27,14 @@ const server = createServer(async (req, res) => {
 		return RenderPageFromBase(res, "delete");
 	
 	// API calls
+
+	// > Users management
+	else if (req.url === "/api/registration" && req.method === "POST")
+		return Registration(req, res);
+	else if (req.url === "/api/login" && req.method === "POST")
+		return Login(req, res);
+	else if (req.url === "/api/logout" && req.method === "POST")
+		return Logout(req, res);
 	
 	// > GETs
 	else if (req.url.split("?")[0] === "/api/get_by_id" && req.method === "GET")

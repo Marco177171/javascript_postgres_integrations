@@ -3,22 +3,32 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static?file=css/jpi.css">
 	<title>JPI Project</title>
 </head>
 <body>
 	<header>
-		<p>JPI - Javascript + Postgres Integrations</p>
+		<p>JPI - Docs</p>
 	</header>
 	<nav>
 		<a href="/docs">Index</a>
-		<a href="/docs/get">GET</a>
-		<a href="/docs/post">POST</a>
-		<a href="/docs/delete">DELETE</a>
-		<a href="/docs/patch">PATCH</a>
 	</nav>
-	{% JPI_CONTENT %}
-	<footer>
-		<p>JPI - 2027</p>
-	</footer>
+	<aside>
+		<p>CRUD operations</p>
+		<ul>
+			<li><a href="/docs/get">GET</a></li>
+			<li><a href="/docs/post">POST</a></li>
+			<li><a href="/docs/put">PUT</a></li>
+			<li><a href="/docs/patch">PATCH</a></li>
+			<li><a href="/docs/delete">DELETE</a></li>
+		</ul>
+	</aside>
+	<main>
+		{% JPI_CONTENT %}
+		<footer>
+			<p>JPI - 2027</p>
+			<a href="https://studiopulsar.pro">Studio Pulsar</a>
+		</footer>
+	</main>
 </body>
 </html>

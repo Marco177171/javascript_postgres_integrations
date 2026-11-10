@@ -1,3 +1,35 @@
-<h1>DELETEing an object from the DB</h1>
-<p>The delete endpoint is:</p>
-<code>.../api | method: DELETE</code>
+<h1>DELETEing objects from the DB</h1>
+<p>In order to DELETE objects on a table, call this endpoint:</p>
+<code>.../api?table=*table_name* | method DELETE</code>
+
+<p>The <code>DELETE</code> method automatically redirects the request to the <code>Delete()</code> function.</p>
+<p>The function <code>Delete()</code> executes the <code>DELETE FROM *table* WHERE ...;</code> query in Postgres.</p>
+<p>Only define <code>table</code> in the URL. All other entries will be ignored.</p>
+
+<div class="divider"></div>
+<span>Examples:</span><br>
+<code>.../api?table=cars</code><br>
+<code>.../api?table=photographers</code><br>
+<code>.../api?table=computers</code>
+<p>In order to specify the objects to erase, use the <code>body</code> in the <code>fetch()</code> Request.</p>
+<p>Define columns and values. The API will erase the result(s) of the query.</p>
+
+<div class="divider"></div>
+<h3>Example: DELETE all users whose name is "Marco".</h3>
+<pre>async function DeleteUser() {
+	try {
+		const result = await fetch("/api?table=users", {
+			method: "DELETE",
+			// headers: {
+			// 	"Authorization": `Bearer ${localStorage.getItem("token")}`
+			// }
+			body: JSON.stringify({
+				"name": "Marco"
+			})
+		});
+		const result_json = await result.json();
+		console.log(result_json);
+	} catch (error) {
+		console.error(error);
+	}
+}</pre>

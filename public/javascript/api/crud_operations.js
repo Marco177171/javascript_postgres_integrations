@@ -101,12 +101,12 @@ export async function Search(req, res) {
 
 export async function Post(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
-    const chunks = [];
+	const chunks = [];
 
-    for await (const chunk of req) {
-        chunks.push(chunk);
-    }
-    const body = JSON.parse(Buffer.concat(chunks));
+	for await (const chunk of req) {
+		chunks.push(chunk);
+	}
+	const body = JSON.parse(Buffer.concat(chunks));
 
 	try {
 		const result = await sql`
@@ -130,12 +130,12 @@ export async function Post(req, res) {
 
 export async function Delete(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
-    const chunks = [];
+	const chunks = [];
 
-    for await (const chunk of req) {
-        chunks.push(chunk);
-    }
-    const body = JSON.parse(Buffer.concat(chunks));
+	for await (const chunk of req) {
+		chunks.push(chunk);
+	}
+	const body = JSON.parse(Buffer.concat(chunks));
 
 	const conditions = [];
 	for (const [key, value] of Object.entries(body)) {
