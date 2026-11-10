@@ -1,0 +1,21 @@
+<h1>Installing JPI</h1>
+
+<p>Get JPI from GitHub:</p>
+<code>git clone git@github.com:Marco177171/javascript_postgres_integrations.git</code>
+
+<p>Install node_modules:</p>
+<code>cd javascript_postgres_integrations</code><br>
+<code>npm i</code>
+
+<p>Copy and edit the .env.example file:</p>
+<code>cp .env.example .env</code>
+
+<p>Open the .env file and update it if needed.</p>
+
+<p>If you need a new DB and Adminer, create them:</p>
+<code>docker compose up --build</code>
+
+<p>Launch the server:</p>
+<code>node --env-file=.env server.js</code>
+<p>Or use the script in <code>package.json</code>:</p>
+<code>npm start</code>

@@ -9,13 +9,13 @@ export async function Registration(req, res) {
 	}
 	const body = JSON.parse(Buffer.concat(chunks));
 	
-	jwt.sign({ foo: 'bar' }, 
-		process.env.JWT_SECRET_KEY, 
-		{ algorithm: process.env.JWT_ALGORITHM }, 
-		function(err, token) {
-			console.log("TOKEN:", token);
-		}
-	);
+	// jwt.sign({ foo: 'bar' }, 
+	// 	process.env.JWT_SECRET_KEY, 
+	// 	{ algorithm: process.env.JWT_ALGORITHM }, 
+	// 	function(err, token) {
+	// 		console.log("TOKEN:", token);
+	// 	}
+	// );
 	
 	try {
 		const result = await sql`

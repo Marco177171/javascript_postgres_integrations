@@ -17,6 +17,8 @@ const server = createServer(async (req, res) => {
 	// UI renderings
 	if (req.url === "/docs" && req.method === "GET")
 		return RenderPageFromBase(res, "index");
+	if (req.url === "/docs/install" && req.method === "GET")
+		return RenderPageFromBase(res, "install");
 	else if (req.url === "/docs/get" && req.method === "GET")
 		return RenderPageFromBase(res, "get");
 	else if (req.url === "/docs/post" && req.method === "GET")
