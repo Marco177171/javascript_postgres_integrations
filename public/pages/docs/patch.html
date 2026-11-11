@@ -2,7 +2,7 @@
 <p>In order to edit an existing object with PATCH, call this endpoint:</p>
 <code>.../api?table=*table_name* | method PATCH</code>
 
-<p>The <code>PATCH</code> method automatically redirects the request to the <code>Patch()</code> function.</p>
+<p>The <code>PUT</code> method automatically redirects the request to the <code>Patch()</code> function.</p>
 <p>The function <code>Patch()</code> executes the <code>UPDATE *table* SET (body) WHERE (query);</code> query in Postgres.</p>
 <p>Specify <code>?table=*...*</code> to set the table. Define a query to find the object to edit.</p>
 

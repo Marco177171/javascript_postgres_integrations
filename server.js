@@ -12,29 +12,31 @@ import fs from "fs";
 const server = createServer(async (req, res) => {
 	// ManageCachedObjects();
 	
-	// Get static sources (CSS, fonts, ...)
-	if (req.url.split("?")[0] === "/static" && req.method === "GET")
-		return GetStaticSource(req, res);
-	// UI renderings
-	if (req.url === "/docs" && req.method === "GET")
-		return RenderPageFromBase(res, "index");
-	if (req.url === "/docs/install" && req.method === "GET")
-		return RenderPageFromBase(res, "install");
-	else if (req.url === "/docs/get" && req.method === "GET")
-		return RenderPageFromBase(res, "get");
-	else if (req.url === "/docs/post" && req.method === "GET")
-		return RenderPageFromBase(res, "post");
-	else if (req.url === "/docs/put" && req.method === "GET")
-		return RenderPageFromBase(res, "put");
-	else if (req.url === "/docs/patch" && req.method === "GET")
-		return RenderPageFromBase(res, "patch");
-	else if (req.url === "/docs/delete" && req.method === "GET")
-		return RenderPageFromBase(res, "delete");
+	if (process.env.JPI_MODE === "Development") {
+		// Get static sources (CSS, fonts, ...)
+		if (req.url.split("?")[0] === "/static" && req.method === "GET")
+			return GetStaticSource(req, res);
+		// UI renderings
+		if (req.url === "/docs" && req.method === "GET")
+			return RenderPageFromBase(res, "docs/index");
+		if (req.url === "/docs/install" && req.method === "GET")
+			return RenderPageFromBase(res, "docs/install");
+		else if (req.url === "/docs/get" && req.method === "GET")
+			return RenderPageFromBase(res, "docs/get");
+		else if (req.url === "/docs/post" && req.method === "GET")
+			return RenderPageFromBase(res, "docs/post");
+		else if (req.url === "/docs/put" && req.method === "GET")
+			return RenderPageFromBase(res, "docs/put");
+		else if (req.url === "/docs/patch" && req.method === "GET")
+			return RenderPageFromBase(res, "docs/patch");
+		else if (req.url === "/docs/delete" && req.method === "GET")
+			return RenderPageFromBase(res, "docs/delete");
+	}
 	
 	// API calls
 
 	// > Users management
-	else if (req.url === "/api/registration" && req.method === "POST")
+	if (req.url === "/api/registration" && req.method === "POST")
 		return Registration(req, res);
 	else if (req.url === "/api/login" && req.method === "POST")
 		return Login(req, res);

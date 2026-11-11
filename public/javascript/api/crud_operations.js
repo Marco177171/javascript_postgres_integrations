@@ -1,4 +1,5 @@
 import sql from "../init_postgres.js";
+import { RejectEmptyBodies } from "./crud_security.js";
 import allowed_tables from "./permissions.js";
 
 export async function GetAll(req, res) {
@@ -108,6 +109,8 @@ export async function Post(req, res) {
 			chunks.push(chunk);
 		}
 		const body = JSON.parse(Buffer.concat(chunks));
+		if (!RejectEmptyBodies(body, res))
+			return ;
 		
 		const result = await sql`
 			INSERT INTO ${sql(params.get("table"))}
@@ -137,6 +140,9 @@ export async function Put(req, res) {
 			chunks.push(chunk);
 		}
 		const body = JSON.parse(Buffer.concat(chunks));
+		if (!RejectEmptyBodies(body, res))
+			return ;
+
 		const keys = Array.from(params.keys());
 		
 		const conditions = [];
@@ -177,6 +183,9 @@ export async function Patch(req, res) {
 			chunks.push(chunk);
 		}
 		const body = JSON.parse(Buffer.concat(chunks));
+		if (!RejectEmptyBodies(body, res))
+			return ;
+
 		const keys = Array.from(params.keys());
 		
 		const conditions = [];
@@ -217,6 +226,8 @@ export async function Delete(req, res) {
 			chunks.push(chunk);
 		}
 		const body = JSON.parse(Buffer.concat(chunks));
+		if (!RejectEmptyBodies(body, res))
+			return ;
 	
 		const conditions = [];
 		for (const [key, value] of Object.entries(body)) {

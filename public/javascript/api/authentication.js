@@ -1,5 +1,6 @@
 import sql from "../init_postgres.js";
 import jwt from "jsonwebtoken";
+import { RejectEmptyBodies } from "./crud_security.js";
 
 export async function Registration(req, res) {
 	const chunks = [];
@@ -8,6 +9,8 @@ export async function Registration(req, res) {
 		chunks.push(chunk);
 	}
 	const body = JSON.parse(Buffer.concat(chunks));
+	if (!RejectEmptyBodies(body, res))
+		return ;
 	
 	// jwt.sign({ foo: 'bar' }, 
 	// 	process.env.JWT_SECRET_KEY, 
