@@ -4,9 +4,9 @@
 NodeJS and NPM installed on your system.
 
 # What to install first.
-We have few important dependencies:
+We have few important dependencies. Install them.
 ```bash
-npm install postgres
+npm install
 ```
 
 # The Environ file.

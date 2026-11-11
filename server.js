@@ -4,7 +4,8 @@ import { RenderPageFromBase, GetStaticSource } from "./public/javascript/user_in
 import { 
 	GetByID, Search,
 	Post, Put, Delete,
-	Patch
+	Patch,
+	LikeSearch
 } from "./public/javascript/api/crud_operations.js"
 import { Registration } from "./public/javascript/api/authentication.js";
 import fs from "fs";
@@ -46,6 +47,8 @@ const server = createServer(async (req, res) => {
 	// > CRUD operations
 	else if (req.url.split("?")[0] === "/api/get_by_id" && req.method === "GET")
 		return GetByID(req, res);
+	else if (req.url.split("?")[0] === "/api/like_search" && req.method === "GET")
+		return LikeSearch(req, res);
 	else if (req.url.split("?")[0] === "/api" && req.method === "GET")
 		return Search(req, res);
 	else if (req.url.split("?")[0] === "/api" && req.method === "POST")
