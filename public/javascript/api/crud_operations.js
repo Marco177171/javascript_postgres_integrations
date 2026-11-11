@@ -1,10 +1,14 @@
 import sql from "../init_postgres.js";
-import { RejectEmptyBodies } from "./crud_security.js";
+import { RejectEmptyBodies, CheckParams } from "./crud_security.js";
 import allowed_tables from "./permissions.js";
 
 export async function GetAll(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 	try {
+		const keys = Array.from(params.keys());
+		if (CheckParams(keys, res) === false)
+			return ;
+		
 		const results = await sql`
 			SELECT * 
 			FROM ${sql(params.get("table"))};
@@ -26,6 +30,10 @@ export async function GetAll(req, res) {
 export async function GetByID(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 	try {
+		const keys = Array.from(params.keys());
+		if (CheckParams(keys, res) === false)
+			return ;
+
 		const result = await sql`
 			SELECT * 
 			FROM ${sql(params.get("table"))} 
@@ -50,14 +58,9 @@ export async function Search(req, res) {
 	
 	try {
 		const keys = Array.from(params.keys());
-
-		if (!keys.includes("table")) {
-			res.writeHead(500, {
-				"Content-Type": "application/json",
-			});
-			res.end("Specify a table with '/api?table=...' in order to search");
+		if (CheckParams(keys, res) === false)
 			return ;
-		}
+
 		if (allowed_tables.includes(params.get("table")) === false) {
 			res.writeHead(500, {
 				"Content-Type": "application/json",
@@ -104,12 +107,15 @@ export async function Post(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 	
 	try {
+		const keys = Array.from(params.keys());
+		if (CheckParams(keys, res) === false)
+			return ;
+		
 		const chunks = [];
-		for await (const chunk of req) {
+		for await (const chunk of req)
 			chunks.push(chunk);
-		}
 		const body = JSON.parse(Buffer.concat(chunks));
-		if (!RejectEmptyBodies(body, res))
+		if (RejectEmptyBodies(body, res) === false)
 			return ;
 		
 		const result = await sql`
@@ -135,16 +141,10 @@ export async function Put(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 
 	try {
-		const chunks = [];
-		for await (const chunk of req) {
-			chunks.push(chunk);
-		}
-		const body = JSON.parse(Buffer.concat(chunks));
-		if (!RejectEmptyBodies(body, res))
+		const keys = Array.from(params.keys());
+		if (CheckParams(keys, res) === false)
 			return ;
 
-		const keys = Array.from(params.keys());
-		
 		const conditions = [];
 		for (const key of keys) {
 			if (key === "table") 
@@ -153,6 +153,14 @@ export async function Put(req, res) {
 				sql`${sql(key)} = ${params.get(key)}`
 			);
 		}
+
+		const chunks = [];
+		for await (const chunk of req)
+			chunks.push(chunk);
+		const body = JSON.parse(Buffer.concat(chunks));
+		if (RejectEmptyBodies(body, res) === false)
+			return ;
+
 		const result = await sql`
 			UPDATE ${sql(params.get("table"))}
 			SET ${sql(body)}
@@ -178,15 +186,9 @@ export async function Patch(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 
 	try {
-		const chunks = [];
-		for await (const chunk of req) {
-			chunks.push(chunk);
-		}
-		const body = JSON.parse(Buffer.concat(chunks));
-		if (!RejectEmptyBodies(body, res))
-			return ;
-
 		const keys = Array.from(params.keys());
+		if (CheckParams(keys, res) === false)
+			return ;
 		
 		const conditions = [];
 		for (const key of keys) {
@@ -196,6 +198,14 @@ export async function Patch(req, res) {
 				sql`${sql(key)} = ${params.get(key)}`
 			);
 		}
+
+		const chunks = [];
+		for await (const chunk of req)
+			chunks.push(chunk);
+		const body = JSON.parse(Buffer.concat(chunks));
+		if (RejectEmptyBodies(body, res) === false)
+			return ;
+
 		const result = await sql`
 			UPDATE ${sql(params.get("table"))}
 			SET ${sql(body)}
@@ -221,12 +231,15 @@ export async function Delete(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 	
 	try {
+		const keys = Array.from(params.keys());
+		if (CheckParams(keys, res) === false)
+			return ;
+		
 		const chunks = [];
-		for await (const chunk of req) {
+		for await (const chunk of req)
 			chunks.push(chunk);
-		}
 		const body = JSON.parse(Buffer.concat(chunks));
-		if (!RejectEmptyBodies(body, res))
+		if (RejectEmptyBodies(body, res) === false)
 			return ;
 	
 		const conditions = [];

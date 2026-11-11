@@ -1,11 +1,21 @@
 // Body is an Object
 export function RejectEmptyBodies(body, res) {
 	console.log("Checking the body...");
-	if (!Object.entries(body).length) {
+	if (Object.entries(body).length === 0) {
 		res.writeHead(200, {
 			"Content-Type": "application/json",
 		});
-		res.end(`Error: this request automatically rejects empty bodies.`);
+		res.end("This operation requires a body to be specified.");
 		return false;
+	}
+}
+
+export function CheckParams(params_array, res) {
+	if (!params_array.includes("table")) {
+		res.writeHead(200, {
+			"Content-Type": "application/json",
+		});
+		res.end("This operation requires api?table=... to be specified.");
+		return false ;
 	}
 }
