@@ -101,14 +101,14 @@ export async function Search(req, res) {
 
 export async function Post(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
-	const chunks = [];
-
-	for await (const chunk of req) {
-		chunks.push(chunk);
-	}
-	const body = JSON.parse(Buffer.concat(chunks));
-
+	
 	try {
+		const chunks = [];
+		for await (const chunk of req) {
+			chunks.push(chunk);
+		}
+		const body = JSON.parse(Buffer.concat(chunks));
+		
 		const result = await sql`
 			INSERT INTO ${sql(params.get("table"))}
 			${sql(body)}
@@ -128,25 +128,105 @@ export async function Post(req, res) {
 	}
 }
 
-export async function Delete(req, res) {
+export async function Put(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
-	const chunks = [];
-
-	for await (const chunk of req) {
-		chunks.push(chunk);
-	}
-	const body = JSON.parse(Buffer.concat(chunks));
-
-	const conditions = [];
-	for (const [key, value] of Object.entries(body)) {
-		if (key === "table") 
-			continue;
-		conditions.push(
-			sql`${sql(key)} = ${value}`
-		);
-	}
 
 	try {
+		const chunks = [];
+		for await (const chunk of req) {
+			chunks.push(chunk);
+		}
+		const body = JSON.parse(Buffer.concat(chunks));
+		const keys = Array.from(params.keys());
+		
+		const conditions = [];
+		for (const key of keys) {
+			if (key === "table") 
+				continue;
+			conditions.push(
+				sql`${sql(key)} = ${params.get(key)}`
+			);
+		}
+		const result = await sql`
+			UPDATE ${sql(params.get("table"))}
+			SET ${sql(body)}
+			WHERE ${conditions.reduce(
+				(acc, condition) => sql`${acc} AND ${condition}`
+			)};
+		`;
+		res.writeHead(200, {
+			"Content-Type": "application/json",
+		});
+		res.end(JSON.stringify(result));
+	}
+	catch (error) {
+		console.error(error);
+		res.writeHead(500, {
+			"Content-Type": "application/json",
+		});
+		res.end(JSON.stringify({ error }));
+	}
+}
+
+export async function Patch(req, res) {
+	const params = new URLSearchParams(req.url.split("?")[1]);
+
+	try {
+		const chunks = [];
+		for await (const chunk of req) {
+			chunks.push(chunk);
+		}
+		const body = JSON.parse(Buffer.concat(chunks));
+		const keys = Array.from(params.keys());
+		
+		const conditions = [];
+		for (const key of keys) {
+			if (key === "table") 
+				continue;
+			conditions.push(
+				sql`${sql(key)} = ${params.get(key)}`
+			);
+		}
+		const result = await sql`
+			UPDATE ${sql(params.get("table"))}
+			SET ${sql(body)}
+			WHERE ${conditions.reduce(
+				(acc, condition) => sql`${acc} AND ${condition}`
+			)};
+		`;
+		res.writeHead(200, {
+			"Content-Type": "application/json",
+		});
+		res.end(JSON.stringify(result));
+	}
+	catch (error) {
+		console.error(error);
+		res.writeHead(500, {
+			"Content-Type": "application/json",
+		});
+		res.end(JSON.stringify({ error }));
+	}
+}
+
+export async function Delete(req, res) {
+	const params = new URLSearchParams(req.url.split("?")[1]);
+	
+	try {
+		const chunks = [];
+		for await (const chunk of req) {
+			chunks.push(chunk);
+		}
+		const body = JSON.parse(Buffer.concat(chunks));
+	
+		const conditions = [];
+		for (const [key, value] of Object.entries(body)) {
+			if (key === "table") 
+				continue;
+			conditions.push(
+				sql`${sql(key)} = ${value}`
+			);
+		}
+
 		const result = await sql`
 			DELETE FROM ${sql(params.get("table"))}
 			WHERE ${conditions.reduce(

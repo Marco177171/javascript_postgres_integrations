@@ -31,3 +31,8 @@ Or simply...
 ```bash
 npm start
 ```
+
+# In-depth documentation is in the app itself. Visit:
+```bash
+https://localhost:3000/docs
+```

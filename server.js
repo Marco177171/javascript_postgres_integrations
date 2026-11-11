@@ -3,7 +3,8 @@ import { createServer } from "node:http";
 import { RenderPageFromBase, GetStaticSource } from "./public/javascript/user_interface.js"
 import { 
 	GetByID, Search,
-	Post, Delete
+	Post, Put, Delete,
+	Patch
 } from "./public/javascript/api/crud_operations.js"
 import { Registration } from "./public/javascript/api/authentication.js";
 import fs from "fs";
@@ -23,6 +24,8 @@ const server = createServer(async (req, res) => {
 		return RenderPageFromBase(res, "get");
 	else if (req.url === "/docs/post" && req.method === "GET")
 		return RenderPageFromBase(res, "post");
+	else if (req.url === "/docs/put" && req.method === "GET")
+		return RenderPageFromBase(res, "put");
 	else if (req.url === "/docs/patch" && req.method === "GET")
 		return RenderPageFromBase(res, "patch");
 	else if (req.url === "/docs/delete" && req.method === "GET")
@@ -38,17 +41,17 @@ const server = createServer(async (req, res) => {
 	else if (req.url === "/api/logout" && req.method === "POST")
 		return Logout(req, res);
 	
-	// > GETs
+	// > CRUD operations
 	else if (req.url.split("?")[0] === "/api/get_by_id" && req.method === "GET")
 		return GetByID(req, res);
 	else if (req.url.split("?")[0] === "/api" && req.method === "GET")
 		return Search(req, res);
-	
-	// > POSTs
 	else if (req.url.split("?")[0] === "/api" && req.method === "POST")
 		return Post(req, res);
-
-	// > DELETEs
+	else if (req.url.split("?")[0] === "/api" && req.method === "PUT")
+		return Put(req, res);
+	else if (req.url.split("?")[0] === "/api" && req.method === "PATCH")
+		return Patch(req, res);
 	else if (req.url.split("?")[0] === "/api" && req.method === "DELETE")
 		return Delete(req, res);
 
