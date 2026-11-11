@@ -2,13 +2,10 @@
 import { createServer } from "node:http";
 import { RenderPageFromBase, GetStaticSource } from "./public/javascript/user_interface.js"
 import { 
-	GetByID, Search,
-	Post, Put, Delete,
-	Patch,
-	LikeSearch
+	Search, LikeSearch, 
+	Post, Put, Delete, Patch
 } from "./public/javascript/api/crud_operations.js"
 import { Registration } from "./public/javascript/api/authentication.js";
-import fs from "fs";
 
 const server = createServer(async (req, res) => {
 	// ManageCachedObjects();
@@ -24,6 +21,10 @@ const server = createServer(async (req, res) => {
 			return RenderPageFromBase(res, "docs/install");
 		else if (req.url === "/docs/get" && req.method === "GET")
 			return RenderPageFromBase(res, "docs/get");
+		else if (req.url === "/docs/get_like_search" && req.method === "GET")
+			return RenderPageFromBase(res, "docs/get_like_search");
+		else if (req.url === "/docs/get_by_id" && req.method === "GET")
+			return RenderPageFromBase(res, "docs/get_by_id");
 		else if (req.url === "/docs/post" && req.method === "GET")
 			return RenderPageFromBase(res, "docs/post");
 		else if (req.url === "/docs/put" && req.method === "GET")
@@ -45,8 +46,6 @@ const server = createServer(async (req, res) => {
 		return Logout(req, res);
 	
 	// > CRUD operations
-	else if (req.url.split("?")[0] === "/api/get_by_id" && req.method === "GET")
-		return GetByID(req, res);
 	else if (req.url.split("?")[0] === "/api/like_search" && req.method === "GET")
 		return LikeSearch(req, res);
 	else if (req.url.split("?")[0] === "/api" && req.method === "GET")

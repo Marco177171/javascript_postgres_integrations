@@ -2,55 +2,6 @@ import sql from "../init_postgres.js";
 import { RejectEmptyBodies, CheckParams } from "./crud_security.js";
 import allowed_tables from "./permissions.js";
 
-export async function GetAll(req, res) {
-	const params = new URLSearchParams(req.url.split("?")[1]);
-	try {
-		const keys = Array.from(params.keys());
-		if (CheckParams(keys, res) === false)
-			return ;
-		
-		const results = await sql`
-			SELECT * 
-			FROM ${sql(params.get("table"))};
-		`;
-		res.writeHead(200, {
-			"Content-Type": "application/json",
-		});
-		res.end(JSON.stringify(results));
-	}
-	catch (error) {
-		res.writeHead(500, {
-			"Content-Type": "application/json",
-		});
-		res.end(error);
-	}
-}
-
-export async function GetByID(req, res) {
-	const params = new URLSearchParams(req.url.split("?")[1]);
-	try {
-		const keys = Array.from(params.keys());
-		if (CheckParams(keys, res) === false)
-			return ;
-
-		const result = await sql`
-			SELECT * 
-			FROM ${sql(params.get("table"))} 
-			WHERE id = ${params.get("id")};
-		`;
-		res.writeHead(200, {
-			"Content-Type": "application/json",
-		});
-		res.end(JSON.stringify(result));
-	}
-	catch (error) {
-		res.writeHead(500, {
-			"Content-Type": "application/json",
-		});
-		res.end(JSON.stringify({ error: "Errore database" }));
-	}
-}
-
 export async function Search(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 	

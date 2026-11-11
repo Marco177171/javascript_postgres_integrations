@@ -1,0 +1,30 @@
+<h1>GETting objects using LIKE</h1>
+<p>In order to find all the objects whose values contain one or more pieces of string, call this endpoint:</p>
+<code>.../api/like_search?table=*table_name*&P1=...&P2=... | method GET</code>
+
+<p>The <code>GET</code> method automatically redirects the request to the <code>LikeSearch()</code> function.</p>
+<p>The function <code>LikeSearch()</code> executes the <code>SELECT * FROM *table* WHERE P1 LIKE '%value%' AND P2 LIKE "%value%" AND ...;</code> query in Postgres.</p>
+<p>If only <code>table</code> is defined in the URL, the DB will return all the entries.</p>
+
+<div class="divider"></div>
+<span>Examples:</span><br>
+<code>.../api/like_search?table=cars&brand=Merc -> Returns all *Merc*edes</code><br>
+<code>.../api/like_search?table=photographers&last_name=on -> Returns both Richard Aved*on* and Henri Cartier-Bress*on* </code><br>
+<code>.../api/like_search?table=computers&brand=App -> Returns all *App*le conputers</code>
+
+<div class="divider"></div>
+<h3>Example: GET all users whose name contains "Mar"</h3>
+<pre>async function GetUsers() {
+	try {
+		const users = await fetch("/api/like_search?table=users&name=Mar", {
+			method: "GET",
+			// headers: {
+			// 	"Authorization": `Bearer ${localStorage.getItem("token")}`
+			// }
+		});
+		const users_json = await users.json();
+		console.log(users_json);
+	} catch (error) {
+		console.error(error);
+	}
+}</pre>
