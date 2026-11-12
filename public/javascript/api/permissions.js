@@ -1,4 +1,4 @@
-const allowed_tables = {
+const permissions_table = {
 	"admin": {
 		"users": ["GET", "POST", "PUT", "PATCH", "DELETE"],
 		"cars": ["GET", "POST", "PUT", "PATCH", "DELETE"]
@@ -21,8 +21,9 @@ const actions = [
 	"DELETE",
 ];
 
-// const allowed_tables = [
-// 	"users": [],
-// ];
+const allowed_tables = [
+	"users",
+	"accounts",
+];
 
 export default allowed_tables;

@@ -1,6 +1,7 @@
 import sql from "../init_postgres.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import fs from "fs";
 import { RejectEmptyBodies } from "./crud_security.js";
 
 async function GetAccountsByEmail(email) {
@@ -15,6 +16,19 @@ async function GetAccountsByEmail(email) {
 		console.error(error);
 		throw(error);
 	}
+}
+
+export function UserIsAuthenticated(req) {
+	// Get token from the request
+	const token = req.headers.authorization;
+
+	// verify a token asymmetric
+	const cert = fs.readFileSync(process.env.JWT_PUBLIC_KEY);
+	jwt.verify(token, cert, function(err, decoded) {
+		if (err)
+			return false;
+	});
+	return true;
 }
 
 export async function Registration(req, res) {
@@ -67,9 +81,9 @@ export async function Login(req, res) {
 		const account = await GetAccountsByEmail(body["email"]);
 		if (!account) {
 			res.writeHead(404, {
-				"Content-Type": "application/json",
+				"Content-Type": "application/text",
 			});
-			return res.end(JSON.stringify("Account not found"));
+			return res.end("Account not found");
 		}
 
 		// Load hash from your password DB
@@ -77,7 +91,6 @@ export async function Login(req, res) {
 			body["password"],
 			account.password
 		);
-
 		if (!passwordCorrect) {
 			res.writeHead(401, {
 				"Content-Type": "application/json",
@@ -86,10 +99,23 @@ export async function Login(req, res) {
 				error: "Invalid credentials." 
 			}));
 		}
+		
+		// JWT Generation
+		// sign with RSA SHA256
+		const privateKey = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf8");
+		const token = jwt.sign({ email: account.email }, 
+			privateKey, 
+			{ algorithm: 'RS256' }
+		);
+
 		res.writeHead(200, {
 			"Content-Type": "application/json",
 		});
-		res.end(`Login correct.`);
+		res.end(JSON.stringify({
+			"access_token": token,
+			"token_type": "Bearer",
+			"expires_in": 3600
+		}));
 	}
 	catch (error) {
 		console.error(error);

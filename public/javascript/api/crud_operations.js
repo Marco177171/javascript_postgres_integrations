@@ -45,6 +45,7 @@ export async function Search(req, res) {
 		res.end(JSON.stringify(result));
 	}
 	catch (error) {
+		console.error(error);
 		res.writeHead(500, {
 			"Content-Type": "application/json",
 		});

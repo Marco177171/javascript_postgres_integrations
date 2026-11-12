@@ -5,7 +5,10 @@ import {
 	Search, LikeSearch, 
 	Post, Put, Delete, Patch
 } from "./public/javascript/api/crud_operations.js"
-import { Registration, Login } from "./public/javascript/api/authentication.js";
+import { 
+	Registration, Login, 
+	UserIsAuthenticated 
+} from "./public/javascript/api/authentication.js";
 
 const server = createServer(async (req, res) => {
 	// ManageCachedObjects();
@@ -37,7 +40,7 @@ const server = createServer(async (req, res) => {
 	
 	// API calls
 
-	// > Users management
+	// > Accounts management / Authentication
 	if (req.url === "/api/registration" && req.method === "POST")
 		return Registration(req, res);
 	else if (req.url === "/api/login" && req.method === "POST")
@@ -45,19 +48,28 @@ const server = createServer(async (req, res) => {
 	else if (req.url === "/api/logout" && req.method === "POST")
 		return Logout(req, res);
 	
-	// > CRUD operations
-	else if (req.url.split("?")[0] === "/api/like_search" && req.method === "GET")
-		return LikeSearch(req, res);
-	else if (req.url.split("?")[0] === "/api" && req.method === "GET")
-		return Search(req, res);
-	else if (req.url.split("?")[0] === "/api" && req.method === "POST")
-		return Post(req, res);
-	else if (req.url.split("?")[0] === "/api" && req.method === "PUT")
-		return Put(req, res);
-	else if (req.url.split("?")[0] === "/api" && req.method === "PATCH")
-		return Patch(req, res);
-	else if (req.url.split("?")[0] === "/api" && req.method === "DELETE")
-		return Delete(req, res);
+	// > CRUD operations / All are protected
+	else if (UserIsAuthenticated(req) === true) {
+		if (req.url.split("?")[0] === "/api/like_search" && req.method === "GET")
+			return LikeSearch(req, res);
+		else if (req.url.split("?")[0] === "/api" && req.method === "GET")
+			return Search(req, res);
+		else if (req.url.split("?")[0] === "/api" && req.method === "POST")
+			return Post(req, res);
+		else if (req.url.split("?")[0] === "/api" && req.method === "PUT")
+			return Put(req, res);
+		else if (req.url.split("?")[0] === "/api" && req.method === "PATCH")
+			return Patch(req, res);
+		else if (req.url.split("?")[0] === "/api" && req.method === "DELETE")
+			return Delete(req, res);
+	} else {
+		console.error("Unauthorized request.");
+		res.writeHead(401, {
+			"Content-type": "application/text"
+		});
+		res.end("JWT token not valid or expired.");
+		return ;
+	}
 
 	res.writeHead(404);
 	res.end("Not Found");
