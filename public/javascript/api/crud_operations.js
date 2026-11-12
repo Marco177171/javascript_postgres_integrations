@@ -9,7 +9,7 @@ export async function Search(req, res) {
 		const keys = Array.from(params.keys());
 		if (CheckParams(keys, res) === false)
 			return ;
-
+		
 		if (allowed_tables.includes(params.get("table")) === false) {
 			res.writeHead(500, {
 				"Content-Type": "application/json",

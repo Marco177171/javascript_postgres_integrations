@@ -5,7 +5,7 @@ import {
 	Search, LikeSearch, 
 	Post, Put, Delete, Patch
 } from "./public/javascript/api/crud_operations.js"
-import { Registration } from "./public/javascript/api/authentication.js";
+import { Registration, Login } from "./public/javascript/api/authentication.js";
 
 const server = createServer(async (req, res) => {
 	// ManageCachedObjects();
