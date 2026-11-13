@@ -24,7 +24,14 @@ const server = createServer(async (req, res) => {
 	else if (req.url === "/registration" && req.method === "GET")
 		return RenderPageFromBase(res, "app/registration", "app_base");
 	
+	// Accounts management / Authentication
+	else if (req.url === "/api/registration" && req.method === "POST")
+		return Registration(req, res);
+	else if (req.url === "/api/login" && req.method === "POST")
+		return Login(req, res);
+	
 	// Inner DOCS / Only rendered in Dev mode
+	// You might want to comment out the whole block in Production mode
 	else if (process.env.JPI_MODE === "Development") {
 		// UI renderings
 		if (req.url === "/docs" && req.method === "GET")
@@ -46,12 +53,6 @@ const server = createServer(async (req, res) => {
 	}
 	
 	// API routes
-
-	// Accounts management / Authentication
-	if (req.url === "/api/registration" && req.method === "POST")
-		return Registration(req, res);
-	else if (req.url === "/api/login" && req.method === "POST")
-		return Login(req, res);
 	
 	// > Protected API routes
 	else if (UserIsAuthenticated(req)) {
