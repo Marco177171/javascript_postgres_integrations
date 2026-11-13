@@ -13,9 +13,9 @@ export async function GetStaticSource(req, res) {
 	}
 }
 
-export async function RenderPageFromBase(res, page_name) {
+export async function RenderPageFromBase(res, page_name, base_name) {
 	try {
-		let baseHtml = await fs.readFile(`./public/pages/base.html`, "utf8");
+		let baseHtml = await fs.readFile(`./public/pages/${base_name}.html`, "utf8");
 		const htmlContent = await fs.readFile(`./public/pages/${page_name}.html`, "utf8");
 		const compositePage = baseHtml.replace("{% JPI_CONTENT %}", htmlContent);
 		res.writeHead(200, { 

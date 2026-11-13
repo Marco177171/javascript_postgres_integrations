@@ -1,0 +1,30 @@
+<div class="centralMedium card">
+	<p>JPI Login</p>
+	<form onsubmit="
+		Login();
+		return false;
+	">
+		<input type="text" name="email" id="email" placeholder="Email">
+		<input type="password" name="password" id="password" placeholder="Password">
+		<button class="success" type="submit">Login</button>
+	</form>
+</div>
+
+<script>
+async function Login() {
+	try {
+		const auth = await fetch("/api/login", {
+			method: "POST",
+			body: JSON.stringify({
+				"email": document.getElementById("email").value,
+				"password": document.getElementById("password").value,
+			})
+		});
+		const auth_json = await auth.json();
+		// console.log(auth_json);
+		localStorage.setItem("token", auth_json.access_token);
+	} catch (error) {
+		document.getElementById("help_text").innerText = error.error;
+	}
+}
+</script>

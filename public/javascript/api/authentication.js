@@ -2,7 +2,7 @@ import sql from "../init_postgres.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import fs from "fs";
-import { RejectEmptyBodies } from "./crud_security.js";
+import { RejectEmptyBodies } from "../security/crud_security.js";
 
 async function GetAccountsByEmail(email) {
 	try {
@@ -23,12 +23,17 @@ export function UserIsAuthenticated(req) {
 	const token = req.headers.authorization;
 
 	// verify a token asymmetric
-	const cert = fs.readFileSync(process.env.JWT_PUBLIC_KEY);
+	const cert = fs.readFileSync(process.env.JWT_PUBLIC_KEY, "utf-8");
+	console.log(cert);
 	jwt.verify(token, cert, function(err, decoded) {
-		if (err)
+		if (err) {
+			console.error(err);
 			return false;
+		} else {
+			console.log(decoded);
+			return true;
+		}
 	});
-	return true;
 }
 
 export async function Registration(req, res) {
@@ -40,13 +45,21 @@ export async function Registration(req, res) {
 		const body = JSON.parse(Buffer.concat(chunks));
 		if (RejectEmptyBodies(body, res) === false)
 			return ;
-
-		console.log(`Password: ${body["password"]}`);
+		if (!body["email"] || !body["password"] || 
+			body["email"] === undefined || body["password"] === undefined) {
+			console.error(error);
+			res.writeHead(500, {
+				"Content-Type": "application/json",
+			});
+			res.end(JSON.stringify({
+				"Error": "Both email and password must be provided"
+			}));
+			return ;
+		}
 
 		// hash the password
 		const salt = await bcrypt.genSalt(10);
 		const hashed_password = await bcrypt.hash(body["password"], salt);
-		console.log(`Hashed passwword: ${hashed_password}. Length = ${hashed_password.length}`);
 
 		const result = await sql`
 			INSERT INTO accounts
@@ -73,7 +86,7 @@ export async function Login(req, res) {
 		const chunks = [];
 		for await (const chunk of req)
 			chunks.push(chunk);
-		
+
 		const body = JSON.parse(Buffer.concat(chunks));
 		if (RejectEmptyBodies(body, res) === false)
 			return ;

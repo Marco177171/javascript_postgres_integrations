@@ -1,6 +1,6 @@
 import sql from "../init_postgres.js";
-import { RejectEmptyBodies, CheckParams } from "./crud_security.js";
-import allowed_tables from "./permissions.js";
+import { RejectEmptyBodies, CheckParams } from "../security/crud_security.js";
+import { allowed_tables } from "../security/permissions.js";
 
 export async function Search(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);

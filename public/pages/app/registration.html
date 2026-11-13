@@ -1,0 +1,29 @@
+<div class="centralMedium card">
+	<p>JPI Registration</p>
+	<form onsubmit="
+		Registration();
+		return false;
+	">
+		<input type="text" name="email" id="email" placeholder="Email">
+		<input type="password" name="password" id="password" placeholder="Password">
+		<button class="success" type="submit">Create account</button>
+	</form>
+</div>
+
+<script>
+async function Registration() {
+	try {
+		const auth = await fetch("/api/registration", {
+			method: "POST",
+			body: JSON.stringify({
+				"email": document.getElementById("email").value,
+				"password": document.getElementById("password").value,
+			})
+		});
+		const users_json = await auth.json();
+		console.log(users_json);
+	} catch (error) {
+		console.error(error);
+	}
+}
+</script>

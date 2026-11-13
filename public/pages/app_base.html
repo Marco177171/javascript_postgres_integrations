@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/static?file=css/jpi.css">
+	<link rel="manifest" href="/static?file=app/webmanifest.json" crossorigin="use-credentials" />
+	<title>JPI Project</title>
+</head>
+<body>
+	<header>
+		<p>JPI - Application</p>
+	</header>
+	<nav>
+		<a href="/">JPI Index</a>
+		<a href="/docs">Docs mode</a>
+	</nav>
+	<aside>
+		<p>Application</p>
+		<ul>
+			<li><a href="/login">Login</a></li>
+			<li><a href="/registration">Registration</a></li>
+		</ul>
+	</aside>
+	<main>
+		{% JPI_CONTENT %}
+	</main>
+</body>
+</html>

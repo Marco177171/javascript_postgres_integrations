@@ -1,15 +1,15 @@
 const permissions_table = {
 	"admin": {
+		"accounts": ["GET", "POST", "PUT", "PATCH", "DELETE"],
 		"users": ["GET", "POST", "PUT", "PATCH", "DELETE"],
-		"cars": ["GET", "POST", "PUT", "PATCH", "DELETE"]
 	},
 	"user": {
-		"users": ["GET", "POST"],
-		"cars": ["GET", "POST", "PUT"]
+		"accounts": [],
+		"users": ["GET"],
 	},
 	"viewer": {
+		"accounts": [],
 		"users": ["GET"],
-		"cars": ["GET"]
 	}
 };
 
@@ -21,9 +21,7 @@ const actions = [
 	"DELETE",
 ];
 
-const allowed_tables = [
+export const allowed_tables = [
 	"users",
 	"accounts",
 ];
-
-export default allowed_tables;
