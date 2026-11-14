@@ -16,8 +16,15 @@ cp .env.example .env
 ```
 This will allow us to use secrets later.
 
+# Generate your JWT keys.
+Create your keys. Encryption systems won't work without them.
+```bash
+cd jwt_keys
+sh jpi_gen_keys.sh
+```
+
 # Docker system.
-Run Postgres and Adminer to test:
+If you need them, start Postgres and Adminer:
 ```bash
 docker compose up --build
 ```
