@@ -18,22 +18,18 @@ async function GetAccountsByEmail(email) {
 	}
 }
 
-export function UserIsAuthenticated(req) {
-	const token = req.headers.authorization;
-	console.log(`Token received: ${token}`);
-
-	const cert = fs.readFileSync(process.env.JWT_PRIVATE_KEY, "utf-8");
-	console.log(`Cert found: ${cert}`);
-	
-	jwt.verify(token, cert, function(err, decoded) {
-		if (err) {
-			console.error(err);
-			return false;
-		} else {
-			console.log(decoded);
-			return true;
-		}
-	});
+export async function UserIsAuthenticated(req) {
+	const token = req.headers.authorization.split(" ")[1];
+	const cert = fs.readFileSync(process.env.JWT_PUBLIC_KEY, "utf-8");
+	try {
+		// console.log("Verifying token...");
+  		const decoded = jwt.verify(token, cert);
+		// console.log("Decoded:", decoded);
+		return true;
+	} catch(err) {
+		console.error(err);
+		return false;
+	}
 }
 
 export async function Registration(req, res) {

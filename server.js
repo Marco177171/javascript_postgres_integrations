@@ -54,7 +54,7 @@ const server = createServer(async (req, res) => {
 		return Login(req, res);
 	
 	// > Protected routes
-	else if (UserIsAuthenticated(req) === true) {
+	else if (await UserIsAuthenticated(req) === true) {
 		// API routes:
 		if (req.url.split("?")[0] === "/api/like_search" && req.method === "GET")
 			return LikeSearch(req, res);
