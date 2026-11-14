@@ -1,1 +1,27 @@
 <h1>Application Index</h1>
+<p>This is the index of the new JPI app.</p>
+
+<form onsubmit="
+	TestProtected();
+	return false;
+">
+	<button type="submit">Test protected route</button>
+</form>
+
+<script>
+async function TestProtected() {
+	const token = localStorage.getItem("token");
+	try {
+		const result = await fetch("/api?table=accounts", {
+			method: "GET",
+			headers: {
+				"Authorization": `Bearer ${token}`
+			}
+		});
+		const result_json = await result.json();
+		console.log(result_json);
+	} catch (error) {
+		console.error(error);
+	}
+}
+</script>

@@ -23,6 +23,7 @@ async function Login() {
 		const auth_json = await auth.json();
 		// console.log(auth_json);
 		localStorage.setItem("token", auth_json.access_token);
+		location.href = "/";
 	} catch (error) {
 		document.getElementById("help_text").innerText = error.error;
 	}

@@ -1,23 +1,14 @@
 import sql from "../init_postgres.js";
-import { RejectEmptyBodies, CheckParams } from "../security/crud_security.js";
-import { allowed_tables } from "../security/permissions.js";
+import { RejectEmptyBodies, CheckParams, DoEntriesExist } from "../security/crud_security.js";
 
 export async function Search(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 	
 	try {
+		if (CheckParams(params, res) === false)
+			return ;
+		
 		const keys = Array.from(params.keys());
-		if (CheckParams(keys, res) === false)
-			return ;
-		
-		if (allowed_tables.includes(params.get("table")) === false) {
-			res.writeHead(500, {
-				"Content-Type": "application/json",
-			});
-			res.end("Table not allowed");
-			return ;
-		}
-		
 		const conditions = [];
 		for (const key of keys) {
 			if (key === "table") 
@@ -57,19 +48,11 @@ export async function LikeSearch(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 	
 	try {
-		const keys = Array.from(params.keys());
-		if (CheckParams(keys, res) === false)
+		if (CheckParams(params, res) === false)
 			return ;
-
-		if (allowed_tables.includes(params.get("table")) === false) {
-			res.writeHead(500, {
-				"Content-Type": "application/json",
-			});
-			res.end("Table not allowed");
-			return ;
-		}
 		
 		const conditions = [];
+		const keys = Array.from(params.keys());
 		for (const key of keys) {
 			if (key === "table") 
 				continue;
@@ -107,8 +90,7 @@ export async function Post(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 	
 	try {
-		const keys = Array.from(params.keys());
-		if (CheckParams(keys, res) === false)
+		if (CheckParams(params, res) === false)
 			return ;
 		
 		const chunks = [];
@@ -140,11 +122,11 @@ export async function Put(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 
 	try {
-		const keys = Array.from(params.keys());
-		if (CheckParams(keys, res) === false)
+		if (CheckParams(params, res) === false)
 			return ;
-
+		
 		const conditions = [];
+		const keys = Array.from(params.keys());
 		for (const key of keys) {
 			if (key === "table") 
 				continue;
@@ -152,6 +134,8 @@ export async function Put(req, res) {
 				sql`${sql(key)} = ${params.get(key)}`
 			);
 		}
+		if (await DoEntriesExist(params, conditions, res))
+			return ;
 
 		const chunks = [];
 		for await (const chunk of req)
@@ -184,11 +168,11 @@ export async function Patch(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 
 	try {
-		const keys = Array.from(params.keys());
-		if (CheckParams(keys, res) === false)
+		if (CheckParams(params, res) === false)
 			return ;
 		
 		const conditions = [];
+		const keys = Array.from(params.keys());
 		for (const key of keys) {
 			if (key === "table") 
 				continue;
@@ -196,6 +180,8 @@ export async function Patch(req, res) {
 				sql`${sql(key)} = ${params.get(key)}`
 			);
 		}
+		if (await DoEntriesExist(params, conditions, res))
+			return ;
 
 		const chunks = [];
 		for await (const chunk of req)
@@ -228,15 +214,7 @@ export async function Delete(req, res) {
 	const params = new URLSearchParams(req.url.split("?")[1]);
 	
 	try {
-		const keys = Array.from(params.keys());
-		if (CheckParams(keys, res) === false)
-			return ;
-		
-		const chunks = [];
-		for await (const chunk of req)
-			chunks.push(chunk);
-		const body = JSON.parse(Buffer.concat(chunks));
-		if (RejectEmptyBodies(body, res) === false)
+		if (CheckParams(params, res) === false)
 			return ;
 		
 		const conditions = [];
@@ -247,6 +225,15 @@ export async function Delete(req, res) {
 				sql`${sql(key)} = ${value}`
 			);
 		}
+		if (await DoEntriesExist(params, conditions, res) === false)
+			return ;
+		
+		const chunks = [];
+		for await (const chunk of req)
+			chunks.push(chunk);
+		const body = JSON.parse(Buffer.concat(chunks));
+		if (RejectEmptyBodies(body, res) === false)
+			return ;
 		
 		const result = await sql`
 			DELETE FROM ${sql(params.get("table"))}

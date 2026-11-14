@@ -1,38 +1,19 @@
 // server.js
 import { createServer } from "node:http";
-import { RenderPageFromBase, GetStaticSource } from "./public/javascript/user_interface.js"
+import { RenderPageFromBase, GetStaticSource } from "./javascript/user_interface.js"
 import { 
 	Search, LikeSearch, 
 	Post, Put, Delete, Patch
-} from "./public/javascript/api/crud_operations.js"
+} from "./javascript/api/crud_operations.js"
 import { 
 	Registration, Login, 
 	UserIsAuthenticated 
-} from "./public/javascript/api/authentication.js";
+} from "./javascript/api/authentication.js";
 
 const server = createServer(async (req, res) => {
-
-	// Static sources (CSS, fonts, ...)
-	if (req.url.split("?")[0] === "/static" && req.method === "GET")
-		return GetStaticSource(req, res);
-	
-	// Application VIEWs / UI
-	else if (req.url === "/" && req.method === "GET")
-		return RenderPageFromBase(res, "app/index", "app_base");
-	else if (req.url === "/login" && req.method === "GET")
-		return RenderPageFromBase(res, "app/login", "app_base");
-	else if (req.url === "/registration" && req.method === "GET")
-		return RenderPageFromBase(res, "app/registration", "app_base");
-	
-	// Accounts management / Authentication
-	else if (req.url === "/api/registration" && req.method === "POST")
-		return Registration(req, res);
-	else if (req.url === "/api/login" && req.method === "POST")
-		return Login(req, res);
-	
 	// Inner DOCS / Only rendered in Dev mode
-	// You might want to comment out the whole block in Production mode
-	else if (process.env.JPI_MODE === "Development") {
+	// You might want to comment out or erase the whole block in Production mode
+	if (process.env.JPI_MODE === "Development") {
 		// UI renderings
 		if (req.url === "/docs" && req.method === "GET")
 			return RenderPageFromBase(res, "docs/index", "base");
@@ -51,12 +32,30 @@ const server = createServer(async (req, res) => {
 		else if (req.url === "/docs/delete" && req.method === "GET")
 			return RenderPageFromBase(res, "docs/delete", "base");
 	}
+
+	// Static sources (CSS, fonts, ...)
+	if (req.url.split("?")[0] === "/static" && req.method === "GET")
+		return GetStaticSource(req, res);
+	
+	// Application VIEWs / UI
+	else if (req.url === "/" && req.method === "GET")
+		return RenderPageFromBase(res, "app/index", "app_base");
+	else if (req.url === "/login" && req.method === "GET")
+		return RenderPageFromBase(res, "app/login", "app_base");
+	else if (req.url === "/registration" && req.method === "GET")
+		return RenderPageFromBase(res, "app/registration", "app_base");
 	
 	// API routes
 	
-	// > Protected API routes
-	else if (UserIsAuthenticated(req)) {
-		// CRUD operations:
+	// > Accounts management API / Authentication
+	else if (req.url === "/api/registration" && req.method === "POST")
+		return Registration(req, res);
+	else if (req.url === "/api/login" && req.method === "POST")
+		return Login(req, res);
+	
+	// > Protected routes
+	else if (UserIsAuthenticated(req) === true) {
+		// API routes:
 		if (req.url.split("?")[0] === "/api/like_search" && req.method === "GET")
 			return LikeSearch(req, res);
 		else if (req.url.split("?")[0] === "/api" && req.method === "GET")
@@ -73,9 +72,11 @@ const server = createServer(async (req, res) => {
 			return Logout(req, res);
 	} else {
 		res.writeHead(401, {
-			"Content-type": "application/text"
+			"Content-type": "application/json"
 		});
-		res.end("Token verification failed. Unauthorized request.");
+		res.end(JSON.stringify({
+			"Error": "Token verification failed"
+		}));
 		return ;
 	}
 

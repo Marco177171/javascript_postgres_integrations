@@ -22,8 +22,7 @@ export async function RenderPageFromBase(res, page_name, base_name) {
 			'Content-Type': 'text/html' 
 		});
 		res.end(compositePage);
-	}
-	catch (error) {
+	} catch (error) {
 		res.writeHead(200, {
 			'Content-Type': 'text/html' 
 		});

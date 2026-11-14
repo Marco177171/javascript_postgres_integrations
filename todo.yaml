@@ -1,14 +1,15 @@
 security:
   authentication:
-    - hash the password and save it using .env seed
-    - registration with hashed password
+    # - hash the password and save it using .env seed
+    # - registration with hashed password
   jwt:
-    - registration
-    - login
+    # - registration
+    # - login
+    - protected routes
   request_checking:
     - check jwt validity
     - check if user from JWT can take action on the table
   set protected routes:
     - check the request
     - if valid, get in the endpoint
-    - if JWT is not valid, send a 201 and Logout() by default
+    # - if JWT is not valid, send a 201 and Logout() by default

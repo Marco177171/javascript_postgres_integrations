@@ -1,3 +1,12 @@
-node_modules
+# Secrets
 .env
-jwt_keys
+
+# JS
+node_modules
+
+# Local keys
+jwt_keys/jpi_private.pem
+jwt_keys/jpi_public.pem
+
+# Other
+todo.yaml

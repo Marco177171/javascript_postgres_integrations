@@ -1,9 +1,9 @@
 <h1>GETting objects using LIKE</h1>
-<p>In order to find all the objects whose values contain one or more pieces of string, call this endpoint:</p>
+<p>In order to find all the objects whose values contain a string, call this endpoint:</p>
 <code>.../api/like_search?table=*table_name*&P1=...&P2=... | method GET</code>
 
 <p>The <code>GET</code> method automatically redirects the request to the <code>LikeSearch()</code> function.</p>
-<p>The function <code>LikeSearch()</code> executes the <code>SELECT * FROM *table* WHERE P1 LIKE '%value%' AND P2 LIKE "%value%" AND ...;</code> query in Postgres.</p>
+<p>The function <code>LikeSearch()</code> executes the <code>SELECT * FROM *table* WHERE P1 LIKE '%value%' AND P2 LIKE '%value%' AND ...;</code> query in Postgres.</p>
 <p>If only <code>table</code> is defined in the URL, the DB will return all the entries.</p>
 
 <div class="divider"></div>
