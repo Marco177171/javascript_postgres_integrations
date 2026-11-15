@@ -19,17 +19,14 @@ async function GetAccountsByEmail(email) {
 }
 
 export async function UserIsAuthenticated(req) {
-	const token = req.headers.authorization.split(" ")[1];
+	const token = req.headers.authorization;
 	const cert = fs.readFileSync(process.env.JWT_PUBLIC_KEY, "utf-8");
-	try {
-		// console.log("Verifying token...");
-  		const decoded = jwt.verify(token, cert);
-		// console.log("Decoded:", decoded);
+	// console.log("Verifying token...");
+	const decoded = jwt.verify(token, cert, (decoder, err) => {
+		if (err)
+			return false;
 		return true;
-	} catch(err) {
-		console.error(err);
-		return false;
-	}
+	});
 }
 
 export async function Registration(req, res) {
@@ -133,7 +130,7 @@ export async function Login(req, res) {
 			"Content-Type": "application/json",
 		});
 		res.end(JSON.stringify({
-			"access_token": token,
+			"access_token": `${token}`,
 			"token_type": "Bearer",
 			"expires_in": 3600
 		}));

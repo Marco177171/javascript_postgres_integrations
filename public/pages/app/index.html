@@ -5,21 +5,39 @@
 	TestProtected();
 	return false;
 ">
-	<button type="submit">Test protected route</button>
+	<button class="success" type="submit">Get accounts (Protected)</button>
+	<p class="row" id="result">Results here...</p>
 </form>
 
 <script>
 async function TestProtected() {
 	const token = localStorage.getItem("token");
 	try {
-		const result = await fetch("/api?table=accounts", {
+		const results = await fetch("/api?table=accounts", {
 			method: "GET",
 			headers: {
-				"Authorization": `Bearer ${token}`
+				"Authorization": `${token}`
 			}
 		});
-		const result_json = await result.json();
-		console.log(result_json);
+		if (results.status === 401) {
+			localStorage.clear();
+			document.location = "/login";
+			return ;
+		}
+		const result_json = await results.json();
+		document.getElementById("result").innerHTML = "";
+		result_json.map(item => {
+			const col4 = document.createElement("div");
+			col4.className = "col4";
+			const card = document.createElement("div");
+			card.className = "card";
+			const node = document.createElement("p");
+			const textnode = document.createTextNode(item.email);
+			node.appendChild(textnode);
+			card.appendChild(node);
+			col4.appendChild(card);
+			document.getElementById("result").appendChild(col4);
+		})
 	} catch (error) {
 		console.error(error);
 	}
