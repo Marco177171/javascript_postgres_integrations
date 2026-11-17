@@ -54,9 +54,7 @@ const server = createServer(async (req, res) => {
 		return Login(req, res);
 	
 	// > Routes protection
-	const verification = await UserIsAuthenticated(req);
-	// console.log("JWT verification:", verification);
-	if (verification === false) {
+	if (await UserIsAuthenticated(req) === false) {
 		res.writeHead(401, {
 			"Content-type": "application/text"
 		});

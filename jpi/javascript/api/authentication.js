@@ -27,12 +27,12 @@ export async function UserIsAuthenticated(req) {
 		return false;
 	
 	const cert = fs.readFileSync(process.env.JWT_PUBLIC_KEY, "utf-8");
-		
+
 	try {
 		jwt.verify(token, cert);
 		return true;
 	} catch (error) {
-		console.error(error);
+		// console.error(error);
 		return false;
 	}
 }
