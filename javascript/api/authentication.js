@@ -11,7 +11,7 @@ async function GetAccountsByEmail(email) {
 			FROM accounts 
 			WHERE email = ${email}
 		;`;
-		return accounts; // Only return first
+		return accounts;
 	} catch (error) {
 		console.error(error);
 		throw(error);
@@ -20,13 +20,21 @@ async function GetAccountsByEmail(email) {
 
 export async function UserIsAuthenticated(req) {
 	const token = req.headers.authorization;
+	if (token === "null" || 
+		token == null || 
+		token === "undefined" ||
+		token == undefined)
+		return false;
+	
 	const cert = fs.readFileSync(process.env.JWT_PUBLIC_KEY, "utf-8");
-	// console.log("Verifying token...");
-	const decoded = jwt.verify(token, cert, (decoder, err) => {
-		if (err)
-			return false;
+		
+	try {
+		jwt.verify(token, cert);
 		return true;
-	});
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
 }
 
 export async function Registration(req, res) {

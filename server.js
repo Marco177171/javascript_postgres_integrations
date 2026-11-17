@@ -53,32 +53,34 @@ const server = createServer(async (req, res) => {
 	else if (req.url === "/api/login" && req.method === "POST")
 		return Login(req, res);
 	
-	// > Protected routes
-	else if (await UserIsAuthenticated(req) === true) {
-		// API routes:
-		if (req.url.split("?")[0] === "/api/like_search" && req.method === "GET")
-			return LikeSearch(req, res);
-		else if (req.url.split("?")[0] === "/api" && req.method === "GET")
-			return Search(req, res);
-		else if (req.url.split("?")[0] === "/api" && req.method === "POST")
-			return Post(req, res);
-		else if (req.url.split("?")[0] === "/api" && req.method === "PUT")
-			return Put(req, res);
-		else if (req.url.split("?")[0] === "/api" && req.method === "PATCH")
-			return Patch(req, res);
-		else if (req.url.split("?")[0] === "/api" && req.method === "DELETE")
-			return Delete(req, res);
-		else if (req.url === "/api/logout" && req.method === "POST")
-			return Logout(req, res);
-	} else {
+	// > Routes protection
+	const verification = await UserIsAuthenticated(req);
+	// console.log("JWT verification:", verification);
+	if (verification === false) {
 		res.writeHead(401, {
-			"Content-type": "application/json"
+			"Content-type": "application/text"
 		});
-		res.end(JSON.stringify({
-			"Error": "Token verification failed"
-		}));
+		res.end("Not authorized");
 		return ;
 	}
+
+	// Protected routes
+
+	// API routes:
+	else if (req.url.split("?")[0] === "/api/like_search" && req.method === "GET")
+		return LikeSearch(req, res);
+	else if (req.url.split("?")[0] === "/api" && req.method === "GET")
+		return Search(req, res);
+	else if (req.url.split("?")[0] === "/api" && req.method === "POST")
+		return Post(req, res);
+	else if (req.url.split("?")[0] === "/api" && req.method === "PUT")
+		return Put(req, res);
+	else if (req.url.split("?")[0] === "/api" && req.method === "PATCH")
+		return Patch(req, res);
+	else if (req.url.split("?")[0] === "/api" && req.method === "DELETE")
+		return Delete(req, res);
+	else if (req.url === "/api/logout" && req.method === "POST")
+		return Logout(req, res);
 
 	res.writeHead(404);
 	res.end("Not Found");

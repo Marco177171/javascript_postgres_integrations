@@ -9,9 +9,18 @@
 	<p class="row" id="result">Results here...</p>
 </form>
 
+<form onsubmit="
+	RemoveToken();
+	return false;
+">
+	<button class="success" type="submit">Remove token</button>
+	<p class="row" id="token_result">Token removal results here...</p>
+</form>
+
 <script>
 async function TestProtected() {
 	const token = localStorage.getItem("token");
+	console.log("Testing JWT token: ", token);
 	try {
 		const results = await fetch("/api?table=accounts", {
 			method: "GET",
@@ -20,8 +29,9 @@ async function TestProtected() {
 			}
 		});
 		if (results.status === 401) {
+			console.error("Not authenticated");
 			localStorage.clear();
-			document.location = "/login";
+			location.href = "/login";
 			return ;
 		}
 		const result_json = await results.json();
@@ -40,6 +50,15 @@ async function TestProtected() {
 		})
 	} catch (error) {
 		console.error(error);
+	}
+}
+
+async function RemoveToken() {
+	try {
+		localStorage.removeItem("token");
+		document.getElementById("token_result").innerText = "Token removed";
+	} catch (error) {
+		document.getElementById("token_result").innerText = `Could not erase the token. Error: ${error.message}`;
 	}
 }
 </script>
